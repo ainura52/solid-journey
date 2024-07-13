@@ -1,0 +1,62 @@
+import math
+import random
+
+class City:
+    def __init__(self, name, x, y):
+        self.name = name
+        self.x = x
+        self.y = y
+
+    def distance_to(self, other_city):
+        return math.sqrt((self.x - other_city.x) ** 2 + (self.y - other_city.y) ** 2)
+
+    def __repr__(self):
+        return f"{self.name} ({self.x}, {self.y})"
+
+class Journey:
+    def __init__(self, cities):
+        self.cities = cities
+        self.route = []
+
+    def plan_route(self):
+        # Планируем простой маршрут по порядку добавления городов
+        self.route = self.cities[:]
+
+    def total_distance(self):
+        total_distance = 0
+        for i in range(len(self.route) - 1):
+            total_distance += self.route[i].distance_to(self.route[i + 1])
+        return total_distance
+
+    def estimate_time(self, speed):
+        return self.total_distance() / speed
+
+    def estimate_cost(self, cost_per_km):
+        return self.total_distance() * cost_per_km
+
+    def __repr__(self):
+        route_str = ' -> '.join(city.name for city in self.route)
+        return f"Маршрут: {route_str}"
+
+# Создание городов
+cities = [
+    City("Москва", 0, 0),
+    City("Санкт-Петербург", 5, 7),
+    City("Казань", 10, 2),
+    City("Екатеринбург", 15, 5)
+]
+
+# Создание путешествия
+journey = Journey(cities)
+journey.plan_route()
+
+# Параметры путешествия
+average_speed = 60  # Средняя скорость км/ч
+cost_per_km = 5     # Стоимость за км в у.е.
+
+# Вывод информации о путешествии
+print("Солидное путешествие:")
+print(journey)
+print(f"Общее расстояние: {journey.total_distance():.2f} км")
+print(f"Оценочное время в пути: {journey.estimate_time(average_speed):.2f} часов")
+print(f"Оценочные затраты: {journey.estimate_cost(cost_per_km):.2f} у.е.")
